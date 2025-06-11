@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+# URL shortener service endpoint
+url-shortener:
+  base-url: http://localhost:8081
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
