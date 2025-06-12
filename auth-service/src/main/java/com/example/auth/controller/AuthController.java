@@ -32,4 +32,6 @@ public class AuthController {
         return authService.authenticate(request)
                 .map(ResponseEntity::ok);
     }
+
+
 }
