@@ -26,6 +26,15 @@ spring:
           predicates:
             - Path=/analytics/**
 
+        - id: auth-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/auth/**
+
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+
+jwt:
+  secret: Vw3eX5g9Jz4pQ7sYv9rL2eJb3nT6yB1w
+  expiration: 86400000 # 1 day in milliseconds
