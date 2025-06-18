@@ -30,12 +30,18 @@ public class JwtAuthenticationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
+        System.out.println("Incoming request path: " + path);
+
         // Allow open endpoints
-        if (path.startsWith("/auth/register") || path.startsWith("/auth/login")) {
+        if (path.startsWith("/auth/register") ||
+                path.startsWith("/auth/login") ||
+                path.startsWith("/redirect/")) {
             return chain.filter(exchange);
         }
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        System.out.println("Authorization header: " + authHeader);
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
@@ -56,10 +62,17 @@ public class JwtAuthenticationFilter implements WebFilter {
                 return exchange.getResponse().setComplete();
             }
 
+            // Mutate the request to add the username header
+            ServerWebExchange mutatedExchange = exchange.mutate()
+                    .request(exchange.getRequest().mutate()
+                            .header("X-User-Name", username)
+                            .build())
+                    .build();
+
             // Create authentication and attach to context
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
 
-            return chain.filter(exchange)
+            return chain.filter(mutatedExchange)
                     .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(
                             Mono.just(new SecurityContextImpl(auth)))
                     );

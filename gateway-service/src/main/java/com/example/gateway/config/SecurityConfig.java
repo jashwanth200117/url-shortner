@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/auth/**").permitAll()  // ✅ allow login/register without token
+                        .pathMatchers("/redirect/**").permitAll()
                         .anyExchange().authenticated()         // 🔒 protect all other paths
                 )
                 .addFilterBefore(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)

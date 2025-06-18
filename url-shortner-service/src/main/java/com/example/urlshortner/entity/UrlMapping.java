@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = "shortCode")
+)
 public class UrlMapping {
 
     @Id
@@ -27,4 +30,6 @@ public class UrlMapping {
     private String originalUrl;
 
     private LocalDateTime createdAt;
+
+    private String createdBy;
 }
