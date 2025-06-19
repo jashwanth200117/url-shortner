@@ -21,6 +21,7 @@ public class ClickEventPublisher {
     public void publishClickEvent(ClickEvent clickEvent) {
         try {
             String message = objectMapper.writeValueAsString(clickEvent);
+            System.out.println("The string message is:" + message);
             kafkaTemplate.send(TOPIC, clickEvent.getShortCode(), message);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
