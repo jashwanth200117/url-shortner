@@ -8,6 +8,14 @@ spring:
     mongodb:
       uri: mongodb://root:example@localhost:27017/authdb?authSource=admin
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
 
 jwt:
   secret: Vw3eX5g9Jz4pQ7sYv9rL2eJb3nT6yB1w

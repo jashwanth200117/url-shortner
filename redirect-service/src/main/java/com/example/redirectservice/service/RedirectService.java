@@ -1,6 +1,6 @@
 package com.example.redirectservice.service;
 
-import com.example.redirectservice.client.UrlShortenerClient;
+import com.example.redirectservice.client.UrlShortnerClient;
 import com.example.redirectservice.exception.UrlNotFoundException;
 import com.example.redirectservice.model.ShortenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +11,18 @@ import reactor.core.publisher.Mono;
 public class RedirectService {
 
     @Autowired
-    private UrlShortenerClient urlShortenerClient;
+    private UrlShortnerClient urlShortenerClient;
 
     /**
      * Retrieve the original URL for the given short code
      */
-    public Mono<String> getOriginalUrl(String shortCode) {
-        return urlShortenerClient.getOriginalUrl(shortCode)
-                .map(ShortenResponse::getShortUrl); // No need for switchIfEmpty now
+    public String getOriginalUrl(String shortCode) {
+        ShortenResponse response = urlShortenerClient.getOriginalUrl(shortCode);
+
+        if (response == null || !response.isSuccess()) {
+            throw new UrlNotFoundException("Short URL not found: " + shortCode);
+        }
+
+        return response.getShortUrl();
     }
-
-
 }
